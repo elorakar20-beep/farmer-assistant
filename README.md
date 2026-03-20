@@ -16,17 +16,14 @@ The server reads the Gemini key from either:
 
 ## Cloud Run deployment
 
-The GitHub Actions workflow in `.github/workflows/google-cloudrun-deploy.yml` is set up for a safer deployment model:
-
-- GitHub authenticates to Google Cloud using Workload Identity Federation instead of a long-lived JSON key.
-- The Gemini API key is stored in Secret Manager and mounted into Cloud Run as a file.
-- The app reads that file through `GOOGLE_GENAI_API_KEY_FILE`.
+The GitHub Actions workflow in `.github/workflows/google-cloudrun-deploy.yml` uses GitHub secrets for deployment.
 
 Configure these before deploying:
 
-- GitHub secret `GCP_WIF_PROVIDER`
-- GitHub secret `GCP_DEPLOYER_SERVICE_ACCOUNT`
-- Secret Manager secret named `google-genai-api-key`
-- Secret access for the Cloud Run runtime service account via `roles/secretmanager.secretAccessor`
+- GitHub secret `GCP_CREDENTIALS`
+- GitHub secret `GOOGLE_GENAI_API_KEY`
 
-After updating the secret or workflow settings, redeploy the service.
+`GCP_CREDENTIALS` should contain your Google Cloud service account JSON key for deployment.
+`GOOGLE_GENAI_API_KEY` is passed into Cloud Run as an environment variable during deployment.
+
+After updating a secret, push to `main` again to redeploy the service.
